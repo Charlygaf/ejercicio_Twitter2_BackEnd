@@ -4,7 +4,7 @@ const tweetController = require("../controllers/tweetController");
 
 tweetRouter.get("/tweets", tweetController.index);
 
-// tweetRouter.get("/tweets/:id", tweetController.show)
+tweetRouter.get("/tweets/:id", tweetController.show);
 
 tweetRouter.post("/tweets", tweetController.store);
 

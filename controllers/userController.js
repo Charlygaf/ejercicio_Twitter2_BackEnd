@@ -2,6 +2,11 @@ const User = require("../schemas/User");
 const Tweet = require("../schemas/Tweet");
 const formidable = require("formidable");
 
+async function index(req, res) {
+  const users = await User.find().populate("tweets");
+  res.json(users);
+}
+
 async function show(req, res) {
   const { username } = req.params;
   const user = await User.findOne({ userName: `${username}` });
@@ -10,8 +15,7 @@ async function show(req, res) {
     .sort({ createdAt: "descending" })
     .populate("user")
     .limit(20);
-  const users = await User.find().where({ _id: { $ne: req.user.id } });
-  res.render("profile", { user, users, tweets });
+  res.json({ user, tweets });
 }
 
 async function store(req, res) {
@@ -104,6 +108,7 @@ async function logout(req, res) {
 }
 
 module.exports = {
+  index,
   show,
   update,
   create,

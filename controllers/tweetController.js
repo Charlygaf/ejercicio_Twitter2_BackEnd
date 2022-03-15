@@ -6,6 +6,12 @@ async function index(req, res) {
   res.json(tweets);
 }
 
+async function show(req, res) {
+  const { id } = req.params;
+  const tweet = await Tweet.findOne({ id: id }).populate("user");
+  res.json(tweet);
+}
+
 async function store(req, res) {
   try {
     const tweet = await Tweet.create({
@@ -51,6 +57,7 @@ async function unlike(req, res) {
 }
 
 module.exports = {
+  show,
   index,
   store,
   destroy,
