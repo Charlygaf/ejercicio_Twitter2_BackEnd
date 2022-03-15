@@ -2,8 +2,6 @@ const express = require("express");
 const userController = require("../controllers/userController");
 const userRouter = express.Router();
 
-userRouter.get("/home", userController.index);
-
 userRouter.get("/:username", userController.show);
 
 userRouter.post("/follow", userController.follow);

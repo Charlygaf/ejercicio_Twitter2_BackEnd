@@ -1,6 +1,11 @@
 const Tweet = require("../schemas/Tweet");
 const User = require("../schemas/User");
 
+async function index(req, res) {
+  const tweets = await Tweet.find().populate("user");
+  res.json(tweets);
+}
+
 async function store(req, res) {
   try {
     const tweet = await Tweet.create({
@@ -46,6 +51,7 @@ async function unlike(req, res) {
 }
 
 module.exports = {
+  index,
   store,
   destroy,
   like,
