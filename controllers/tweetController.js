@@ -1,4 +1,3 @@
-const { redirect } = require("express/lib/response");
 const Tweet = require("../schemas/Tweet");
 const User = require("../schemas/User");
 
