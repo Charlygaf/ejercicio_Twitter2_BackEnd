@@ -2,11 +2,6 @@ const User = require("../schemas/User");
 const Tweet = require("../schemas/Tweet");
 const formidable = require("formidable");
 
-async function index(req, res) {
-  const tweets = await Tweet.find().populate("user");
-  res.json(tweets);
-}
-
 async function show(req, res) {
   const { username } = req.params;
   const user = await User.findOne({ userName: `${username}` });
@@ -109,7 +104,6 @@ async function logout(req, res) {
 }
 
 module.exports = {
-  index,
   show,
   update,
   create,
