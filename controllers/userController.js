@@ -4,7 +4,7 @@ const formidable = require("formidable");
 
 async function index(req, res) {
   const users = await User.find().populate("tweets");
-  res.json(users);
+  res.status(200).json(users);
 }
 
 async function show(req, res) {
@@ -15,7 +15,7 @@ async function show(req, res) {
     .sort({ createdAt: "descending" })
     .populate("user")
     .limit(20);
-  res.json({ user, tweets });
+  res.status(200).json({ user, tweets });
 }
 
 async function store(req, res) {
@@ -23,17 +23,13 @@ async function store(req, res) {
     const user = await User.create(req.body);
     req.login(user, (error) => {
       if (error) {
-        res.status(500).send("Lo sentimos, error inesperado.");
+        res.status(500).json({ message: "Internal Server Error" });
       }
       res.redirect("/");
     });
   } catch (error) {
-    res.status(400).render("portal");
+    res.status(400).json({ message: "Bad Request" });
   }
-}
-
-async function create(req, res) {
-  res.render("register");
 }
 
 async function update(req, res) {
@@ -46,8 +42,6 @@ async function update(req, res) {
     keepExtensions: true,
   });
   form.parse(req, async (err, fields, files) => {
-    /*     console.log(fields);
-    console.log(files); */
     await User.findByIdAndUpdate(req.user.id, {
       $set: {
         firstname: fields.firstname,
@@ -60,7 +54,7 @@ async function update(req, res) {
         password: fields.password,
       },
     });
-    res.redirect(`back`);
+    res.status(206).json({ message: "The profile was updated successfully" });
   });
 }
 
@@ -69,9 +63,9 @@ async function follow(req, res) {
     $push: { following: req.body.objectId },
     function(err, result) {
       if (req.user.id === req.body.objectId) {
-        res.send(err);
+        res.json(err);
       } else {
-        res.send(result);
+        res.json(result);
       }
     },
   });
@@ -79,29 +73,31 @@ async function follow(req, res) {
     $push: { followers: req.user.id },
     function(err, result) {
       if (req.user.id === req.body.objectId) {
-        res.send(err);
+        res.status(409).json(err);
       } else {
-        res.send(result);
+        res.status(200).json(result);
       }
     },
   });
-  res.redirect("back");
+  res.json({ message: "The person was added on followings successfully" });
 }
 
-async function unfollow(req, res) {
-  await User.findByIdAndUpdate(req.user.id, {
-    $pull: { following: req.body.objectId },
-  });
-  await User.findByIdAndUpdate(req.body.objectId, {
-    $pull: { followers: req.user.id },
-  });
-  res.redirect("back");
-}
+/* Habría que agregar a el unfollow con el follow, supongo que con un if o algo de eso (soy facu) */
+
+// async function unfollow(req, res) {
+//   await User.findByIdAndUpdate(req.user.id, {
+//     $pull: { following: req.body.objectId },
+//   });
+//   await User.findByIdAndUpdate(req.body.objectId, {
+//     $pull: { followers: req.user.id },
+//   });
+//   res.redirect("back");
+// }
 
 async function logout(req, res) {
   try {
     req.logout();
-    res.redirect("/");
+    res.status(418).json({ message: "I'm a teapot" });
   } catch (error) {
     res.status(400);
   }
@@ -111,9 +107,8 @@ module.exports = {
   index,
   show,
   update,
-  create,
   follow,
-  unfollow,
+  // unfollow,
   store,
   logout,
 };

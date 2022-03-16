@@ -19,7 +19,7 @@ async function store(req, res) {
       user: req.user,
     });
     await User.findByIdAndUpdate(req.user.id, { $push: { tweets: tweet } });
-    res.redirect("/home");
+    res.status(200).json({ message: "The tweet was uploaded successfully" });
   } catch (error) {
     console.log("ERROR:", error.message);
   }
@@ -30,31 +30,33 @@ async function destroy(req, res) {
   await User.findByIdAndUpdate(req.user.id, {
     $pull: { tweets: id },
   });
-  res.redirect("back");
+  res.status(200).json({ message: "The tweet was removed successfully" });
 }
 
 async function like(req, res) {
   const { id } = req.body;
+
   await Tweet.findByIdAndUpdate(id, {
     $push: { likes: req.user.id },
   });
   await User.findByIdAndUpdate(req.user.id, {
     $push: { likes: id },
   });
-  console.log(req.baseUrl);
-  res.redirect("back");
+  res.redirect({ message: "The like was added on tweet successfully" });
 }
 
-async function unlike(req, res) {
-  const { id } = req.body;
-  await Tweet.findByIdAndUpdate(id, {
-    $pull: { likes: req.user.id },
-  });
-  await User.findByIdAndUpdate(req.user.id, {
-    $pull: { likes: id },
-  });
-  res.redirect("back");
-}
+/* Habría que agregar a el unlike con el like, supongo que con un if o algo de eso (soy facu) */
+
+// async function unlike(req, res) {
+//   const { id } = req.body;
+//   await Tweet.findByIdAndUpdate(id, {
+//     $pull: { likes: req.user.id },
+//   });
+//   await User.findByIdAndUpdate(req.user.id, {
+//     $pull: { likes: id },
+//   });
+//   res.redirect("back");
+// }
 
 module.exports = {
   show,
@@ -62,5 +64,5 @@ module.exports = {
   store,
   destroy,
   like,
-  unlike,
+  // unlike,
 };

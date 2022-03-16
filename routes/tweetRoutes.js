@@ -10,6 +10,6 @@ tweetRouter.post("/tweets", tweetController.store);
 
 tweetRouter.delete("/tweets/:id", tweetController.destroy);
 
-tweetRouter.post("/like", tweetController.like);
-tweetRouter.delete("/unlike", tweetController.unlike);
+tweetRouter.patch("/like", tweetController.like);
+
 module.exports = tweetRouter;
