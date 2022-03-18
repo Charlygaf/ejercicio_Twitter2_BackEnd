@@ -8,9 +8,9 @@ module.exports = async () => {
     {
       firstname: "Pepe",
       lastname: "Ito",
-      photoProfile: "defaultProfile.png",
+
       email: "a@a.com",
-      photoCover: "defaultCoverProfile.png",
+
       password: "1",
       userName: "pepito",
       biography: "Hola que tal mi nombre es Test te invito a seguirme",
@@ -32,8 +32,7 @@ module.exports = async () => {
       firstname: firstname,
       lastname: lastname,
       email: `${firstname}_${lastname}@gmail.com`,
-      photoProfile: "defaultProfile.png",
-      photoCover: "defaultCoverProfile.png",
+
       createdAt: faker.date.past(),
       birthDate: new Date(birth),
       password: "1234",

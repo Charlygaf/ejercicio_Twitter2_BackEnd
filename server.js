@@ -20,7 +20,7 @@ mongoose.connection
   .once("open", () => console.log("¡Conexión con la base de datos establecida!"))
   .on("error", (error) => console.log(error));
 
-//dbInitialSetup();
+// dbInitialSetup();
 
 app.listen(APP_PORT, () =>
   console.log(`\n[Express] Servidor corriendo en el puerto ${APP_PORT}!\n`),
