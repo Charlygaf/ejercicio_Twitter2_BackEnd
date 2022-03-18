@@ -8,7 +8,7 @@ tweetRouter.get("/tweets/:id", tweetController.show);
 
 tweetRouter.post("/tweets", tweetController.store);
 
-tweetRouter.delete("/tweets/:id", tweetController.destroy);
+//tweetRouter.delete("/tweets/:id", tweetController.destroy);
 
 tweetRouter.patch("/like", tweetController.like);
 

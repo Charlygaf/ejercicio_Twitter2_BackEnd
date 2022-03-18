@@ -6,7 +6,7 @@ const publicRouter = express.Router();
 // Rutas del Públicas:
 
 publicRouter.get("/", publicController.index);
-publicRouter.get("/registro", userController.create);
+//publicRouter.get("/registro", userController.create);
 publicRouter.post("/registro", userController.store);
 
 module.exports = publicRouter;

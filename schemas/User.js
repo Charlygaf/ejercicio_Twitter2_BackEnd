@@ -28,9 +28,12 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.methods.validatePassword = async function (pass) {
-  return await bcrypt.compare(pass, this.password);
+userSchema.methods.toJSON = function () {
+  const user = this.toObject();
+  delete user.password;
+  return user;
 };
+userSchema.set("toJSON", { virtuals: true });
 
 const User = mongoose.model("User", userSchema);
 
