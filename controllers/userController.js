@@ -1,6 +1,8 @@
 const User = require("../schemas/User");
 const Tweet = require("../schemas/Tweet");
 const formidable = require("formidable");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 async function index(req, res) {
   const users = await User.find().populate("tweets");
@@ -19,17 +21,25 @@ async function show(req, res) {
 }
 
 async function store(req, res) {
-  try {
-    const user = await User.create(req.body);
-    req.login(user, (error) => {
-      if (error) {
-        res.status(500).json({ message: "Internal Server Error" });
-      }
-      res.redirect("/");
+  const user = new User({
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    birthDate: req.body.birthDate,
+    userName: req.body.userName,
+    email: req.body.email,
+    password: bcrypt.hashSync(req.body.password, 8),
+  });
+
+  user.save((err, user) => {
+    if (err) {
+      res.status(500).send({ message: err });
+      return;
+    }
+    const token = jwt.sign({ id: user.id }, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: 86400, // 24 hours
     });
-  } catch (error) {
-    res.status(400).json({ message: "Bad Request" });
-  }
+    res.json({ message: "User was registered successfully!", accessToken: token, user });
+  });
 }
 
 async function update(req, res) {
